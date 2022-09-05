@@ -1,0 +1,170 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1445557",
+      "name": "view-grid",
+      "font_class": "view-grid",
+      "unicode": "e920",
+      "unicode_decimal": 59680
+    },
+    {
+      "icon_id": "3553571",
+      "name": "数据",
+      "font_class": "ico_data",
+      "unicode": "e673",
+      "unicode_decimal": 58995
+    },
+    {
+      "icon_id": "4765734",
+      "name": "plus-circle",
+      "font_class": "plus-circle",
+      "unicode": "e781",
+      "unicode_decimal": 59265
+    },
+    {
+      "icon_id": "4765896",
+      "name": "eye",
+      "font_class": "eye",
+      "unicode": "e78f",
+      "unicode_decimal": 59279
+    },
+    {
+      "icon_id": "4766293",
+      "name": "user",
+      "font_class": "user",
+      "unicode": "e7ae",
+      "unicode_decimal": 59310
+    },
+    {
+      "icon_id": "4766685",
+      "name": "home",
+      "font_class": "home",
+      "unicode": "e7c6",
+      "unicode_decimal": 59334
+    },
+    {
+      "icon_id": "4766960",
+      "name": "key",
+      "font_class": "key",
+      "unicode": "e7e1",
+      "unicode_decimal": 59361
+    },
+    {
+      "icon_id": "4936584",
+      "name": "app store-fill",
+      "font_class": "appstore-fill",
+      "unicode": "e853",
+      "unicode_decimal": 59475
+    },
+    {
+      "icon_id": "4936628",
+      "name": "sever-fill",
+      "font_class": "sever-fill",
+      "unicode": "e85f",
+      "unicode_decimal": 59487
+    },
+    {
+      "icon_id": "4936634",
+      "name": "fund-fill",
+      "font_class": "fund-fill",
+      "unicode": "e860",
+      "unicode_decimal": 59488
+    },
+    {
+      "icon_id": "4936656",
+      "name": "home-fill",
+      "font_class": "home-fill",
+      "unicode": "e867",
+      "unicode_decimal": 59495
+    },
+    {
+      "icon_id": "6151091",
+      "name": "database-fill",
+      "font_class": "database-fill",
+      "unicode": "e7a6",
+      "unicode_decimal": 59302
+    },
+    {
+      "icon_id": "6598317",
+      "name": "signal-fill",
+      "font_class": "signal-fill",
+      "unicode": "e8e9",
+      "unicode_decimal": 59625
+    },
+    {
+      "icon_id": "6598347",
+      "name": "search",
+      "font_class": "search",
+      "unicode": "e8ef",
+      "unicode_decimal": 59631
+    },
+    {
+      "icon_id": "7712648",
+      "name": "data",
+      "font_class": "data",
+      "unicode": "e729",
+      "unicode_decimal": 59177
+    },
+    {
+      "icon_id": "8092166",
+      "name": "eye close-fill",
+      "font_class": "eyeclose-fill",
+      "unicode": "e8ff",
+      "unicode_decimal": 59647
+    },
+    {
+      "icon_id": "9230698",
+      "name": "View",
+      "font_class": "View",
+      "unicode": "e917",
+      "unicode_decimal": 59671
+    },
+    {
+      "icon_id": "15838501",
+      "name": "menu",
+      "font_class": "menu",
+      "unicode": "e677",
+      "unicode_decimal": 58999
+    },
+    {
+      "icon_id": "15838525",
+      "name": "search",
+      "font_class": "search1",
+      "unicode": "e67d",
+      "unicode_decimal": 59005
+    },
+    {
+      "icon_id": "29391827",
+      "name": "eye",
+      "font_class": "eye1",
+      "unicode": "e95d",
+      "unicode_decimal": 59741
+    },
+    {
+      "icon_id": "29391895",
+      "name": "home",
+      "font_class": "home1",
+      "unicode": "e965",
+      "unicode_decimal": 59749
+    },
+    {
+      "icon_id": "29391972",
+      "name": "plus",
+      "font_class": "plus",
+      "unicode": "e96f",
+      "unicode_decimal": 59759
+    },
+    {
+      "icon_id": "29392077",
+      "name": "unordered-list",
+      "font_class": "unordered-list",
+      "unicode": "e980",
+      "unicode_decimal": 59776
+    }
+  ]
+}

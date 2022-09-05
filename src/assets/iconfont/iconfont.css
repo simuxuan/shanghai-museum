@@ -1,0 +1,105 @@
+@font-face {
+  font-family: "iconfont"; /* Project id  */
+  src: url('iconfont.ttf?t=1662211204616') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-view-grid:before {
+  content: "\e920";
+}
+
+.icon-ico_data:before {
+  content: "\e673";
+}
+
+.icon-plus-circle:before {
+  content: "\e781";
+}
+
+.icon-eye:before {
+  content: "\e78f";
+}
+
+.icon-user:before {
+  content: "\e7ae";
+}
+
+.icon-home:before {
+  content: "\e7c6";
+}
+
+.icon-key:before {
+  content: "\e7e1";
+}
+
+.icon-appstore-fill:before {
+  content: "\e853";
+}
+
+.icon-sever-fill:before {
+  content: "\e85f";
+}
+
+.icon-fund-fill:before {
+  content: "\e860";
+}
+
+.icon-home-fill:before {
+  content: "\e867";
+}
+
+.icon-database-fill:before {
+  content: "\e7a6";
+}
+
+.icon-signal-fill:before {
+  content: "\e8e9";
+}
+
+.icon-search:before {
+  content: "\e8ef";
+}
+
+.icon-data:before {
+  content: "\e729";
+}
+
+.icon-eyeclose-fill:before {
+  content: "\e8ff";
+}
+
+.icon-View:before {
+  content: "\e917";
+}
+
+.icon-menu:before {
+  content: "\e677";
+}
+
+.icon-search1:before {
+  content: "\e67d";
+}
+
+.icon-eye1:before {
+  content: "\e95d";
+}
+
+.icon-home1:before {
+  content: "\e965";
+}
+
+.icon-plus:before {
+  content: "\e96f";
+}
+
+.icon-unordered-list:before {
+  content: "\e980";
+}
+
