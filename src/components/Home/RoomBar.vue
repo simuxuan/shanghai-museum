@@ -1,16 +1,33 @@
-<!-- 销量趋势图表 -->
 <template>
   <div class="com-container">
     <div class="com-chart" ref="room_bar_ref"></div>
   </div>
 </template>
 <script>
+import {mapState} from 'vuex';
 export default {
   data() {
     return {
       chartInstance: null,
       allData: null,
+      // local: '第一展览厅',
+      date1: ['2022-08-30','2022-08-31','2022-09-01','2022-09-02','2022-09-03','2022-09-04','2022-09-05'],
+      data1: [22.0,22.1,22.2,22.0,21.8,22.1,22.0],
+      date2: ['2022-08-30','2022-08-31','2022-09-01','2022-09-02','2022-09-03','2022-09-04','2022-09-05'],
+      data2: [22.2,22.4,21.6,22.0,21.8,22.3,22.1],
+      data: [], // 默认
+      date: [], // 默认
     };
+  },
+  computed:{
+    ...mapState({
+      local:(state)=> state.home.local
+    })
+  },
+  watch:{
+    local(newvalue,oldvalue) {
+      this.updateChart(); // local 改变就重新绘图
+    }
   },
   mounted() {
     this.initChart();
@@ -24,6 +41,16 @@ export default {
   methods: {
     initChart() {
       this.chartInstance = this.$echarts.init(this.$refs.room_bar_ref);
+      // 关联地图 哪个展厅
+/*       if(this.local=='第一展览厅') {
+            this.data=this.data1;
+            this.date=this.date1;
+             // console.log("local=",_this.local)
+          } else{
+            this.data=this.data2;
+            this.date=this.date2;
+            // console.log("local=",_this.local)
+          } */
       const initOption = {
         tooltip: {
           trigger: 'axis',
@@ -42,55 +69,26 @@ export default {
         },
         xAxis: {
           type: 'category',
-          show:false
-          // data: ['1', '2', '3', '4', '5', '6']
+          axisLabel: {
+            show: true,
+            interval: 'auto'
+          },
+          data: this.date // 可能 _this
         },
         yAxis: {
+          scale: true,
+          min: 18,
+          max: 25,
           type: 'value'
         },
-/*         series: [
+        series: [
           {
-           data: [
-              {
-                value: 120,
-                itemStyle: {
-                  color: '#6778BF'
-                }
-              },
-              {
-                value: 200,
-                itemStyle: {
-                  color: '#6CC0B8'
-                }
-              },
-              {
-                value: 150,
-                itemStyle: {
-                  color: '#9967BF'
-                }
-              },
-              {
-                value: 80,
-                itemStyle: {
-                  color: '#BF6778'
-                }
-              },
-              {
-                value: 70,
-                itemStyle: {
-                  color: '#D0C62B'
-                }
-              },
-              {
-                value: 110,
-                itemStyle: {
-                  color: '#80BF67'
-                }
-              }
-            ], 
-            type: 'bar',
-          } 
-        ]*/
+            type: 'bar'
+          },
+          {
+            type: 'line'
+          }
+        ]
       };
       this.chartInstance.setOption(initOption);
     },
@@ -99,27 +97,33 @@ export default {
       this.updateChart();
     },
     updateChart() {
-      // 处理图表需要的数据 200,150,80,70,110
-      const data = [{name:"温度",value:140},{name:"湿度",value:200},{name:"光照",value:150},{name:"二氧化碳",value:70},{name:"二氧化硫",value:90},{name:"有机物",value:40}]
-      const seriesData = data.map(item=>{
-        return {
-            name:item.name,
-            data:[item.value],
-            type:'bar'
-        }
-      })
-      const legnedArr = data.map(item =>{
-        return item.name
-      })
+      // 处理图表需要的数据
+            if(this.local=='第一展览厅') {
+            this.data=this.data1;
+            this.date=this.date1;
+             // console.log("local=",_this.local)
+          } else{
+            this.data=this.data2;
+            this.date=this.date2;
+            // console.log("local=",_this.local)
+          }
       const dataOption = {
-        legend: {
-            data:legnedArr
-        },
-        series:seriesData
+                series: [
+          {
+            data: this.data, // 可能 _this
+            type: 'bar'
+          },
+          {
+            data: this.data,
+            type: 'line'
+          }
+        ]
       };
       this.chartInstance.setOption(dataOption);
     },
     screenAdapter() {
+      // 常用 变化的图表的宽度，去调整字体大小
+      // const titleFontSize = (this.$refs.rank_ref.offsetWidth / 100) * 3.6;
       const adapterOption = {};
       this.chartInstance.setOption(adapterOption);
       this.chartInstance.resize();

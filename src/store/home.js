@@ -1,7 +1,9 @@
 // 引入api
 // import {} from "@/api"
 
-const state = {}
+const state = {
+    local:"第一展览厅"
+}
 
 const actions = {
     async test({commit}) {
@@ -10,8 +12,8 @@ const actions = {
 }
 
 const mutations = {
-    TEST(state,value) {
-
+    UPDATELOCAL(state,value) {
+        state.local = value
     }
 }
 

@@ -36,10 +36,10 @@
               router
               :default-active="activePath"
             >
-              <el-menu-item class="item" index="/statistics">
+              <el-menu-item class="item" index="/decision">
                 <span class="iconfont icon-signal-fill icon" style=""></span
                 >&thinsp;
-                <span class="word">数据统计</span>
+                <span class="word">溯源决策</span>
               </el-menu-item>
               <el-menu-item class="item" index="/system">
                 <span class="iconfont icon-view-grid icon" style=""></span
@@ -92,7 +92,7 @@ export default {
 .home {
   width: 100%;
   height: 100%;
-  background: url("../assets/image/bg／one.png");
+  // background: url("../assets/image/bg／one.png");
   /* background-image: url('../assets/image/bg／two.png'); */
   background-color: #f2f5ff;
   background-size: 100% 100%;

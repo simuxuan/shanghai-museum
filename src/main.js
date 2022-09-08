@@ -14,9 +14,12 @@ import './assets/css/global.css'
 
 // 引入封装的axios 挂载到全局
 import request from '@/api/request.js'
-Vue.prototype.$http = request
+Vue.prototype.$request = request
 
-// import * as API from "@/api"
+import axios from 'axios'
+Vue.prototype.$http = axios
+// axios.defaults.baseURL = 'https://lushengtao0115.github.io' 
+import * as API from "@/api"
 
 // Vue.prototype.$echarts = window.echarts // 挂载echarts到全局 不支持svg
 import * as echarts from 'echarts'
@@ -33,9 +36,14 @@ Vue.config.productionTip = false
 
 new Vue({
   render: h => h(App),
+  data: function() {
+    return {
+      indexName: '默认值',
+    }
+  },
   beforeCreate(){
     Vue.prototype.$bus = this // 全局事件总线
-    // Vue.prototype.$API = API;  // 全局API
+    Vue.prototype.$API = API;  // 全局API
   },
   router,
   store

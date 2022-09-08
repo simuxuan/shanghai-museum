@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "",
   data() {
@@ -33,250 +34,23 @@ export default {
   data() {
     return {};
   },
+  computed: {
+    ...mapState({
+      local: (state) => state.home.local,
+    }),
+  },
   methods: {
     // 博物馆图绘制
     async initMuseum1() {
       var chartDom = document.getElementById("museum1");
       this.chartInstance1 = this.$echarts.init(chartDom);
       var option;
-      var color1 = "#cf0000";
-      var color2 = "#55cf29";
-      var color3 = "#55cf29";
-      var color4 = "#cfc559";
-      var color5 = "#ffff00";
-
-      const res = await this.$http.get(
+      const _this = this;
+      const { data: res } = await this.$http.get(
         // 'https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/examples/data/asset/geo/Beef_cuts_France.svg'
         // 'http://101.132.96.7:8080/shanghaimuseum/img/Beef_cuts_France.svg'
-        "http://live.lstblog.com/museum1_450_440.svg"
-      );
-      //console.log(res);
-
-      // 加一个判断svg的
-      if (res != undefined) {
-        console.log("===2===");
-        this.$echarts.registerMap("Museum", {
-          svg: res,
-        });
-      }
-
-      // 在option中配置所需项目
-      option = {
-        // colorBy: 'data', // 默认serise，可选择为data
-
-        tooltip: {
-          show: true,
-        }, // 默认配置提示框
-
-        // visualMap是视觉映射组件
-        /* 这里可以借鉴一下由series数据大小映射颜色的方法，但是不一定用这种方法
-                    可以使用每个馆，通过数据映射来显示每个馆的颜色(这里需要设定一个合理的机制)
-                    */
-        // visualMap: {
-        // 	// left: 'center',
-        // 	// bottom: '10%',
-        // 	min: 5,
-        // 	max: 100,
-        // 	// orient: 'horizontal',
-        // 	// text: ['', 'Price'],
-        // 	// realtime: true,
-        // 	// calculable: true,
-        // 	inRange: {
-        // 		color: ['#dbac00', '#db6e00', '#cf0000']
-        // 	}
-        // },
-
-        series: [
-          {
-            name: "文物风险状况", // 起个名字
-            type: "map", // 设置为地图类型
-            map: "Museum", // 使用这个地图
-
-            // roam: true, // 鼠标缩放，平移功能
-
-            // 高亮状态下的多边形和标签样式。
-            /* 这里是高亮情况下的一些设置，属性较多，后面可能需要实验
-                        不设置即默认
-                        后续还需要解决：放置在上面背景颜色的更改*/
-
-            emphasis: {
-              label: {
-                /* 这里应该不需要 */
-                show: false, // 是否显示标签
-                position: "top",
-                rotate: 90,
-                color: "#eaeaea",
-              },
-              /* itemStyle指的是 */
-              itemStyle: {
-                areaColor: "#eaeaea", // 地图区域的颜色(高亮时的颜色)
-                color: "#0000ff", // ???图形的颜色(如下)（这里修改不了）
-                borderColor: "#000", // 每个小块图形的轮廓颜色
-                opacity: 1, // 透明度设置，这个地方改变了高亮时的颜色
-              },
-            },
-
-            // 选中模式，表示是否支持多个选中
-            selectedMode: false,
-
-            // 给对应的块赋值
-            /*
-                        地图系列的数据内容数组，数组项可以为单个数值
-                        如果需要在数据中加入其它维度给 visualMap 组件用来映射到颜色等其它图形属性。每个数据项也可以是数组
-                        这时候可以将每项数组中的第二个值指定给 visualMap 组件。
-                        更多时候我们需要指定每个数据项的名称，这时候需要每个项为一个对象。
-
-                        name 数据所对应的地图区域的名称
-                        number 该区域的数据值
-                        selected 该区域是否选中
-                        ** itemStyle 该数据所在区域的多边形样式设置
-
-                        ** label 图形上的文本标签，可用于说明图形的一些数据信息，比如值，名称等。
-                        ** emphasis 该数据所在区域的多边形高亮状态
-                        ** select 该数据所在区域的多边形选中状态
-                        * tooltip 本系列每个数据项中特定的 tooltip 设定。
-                         */
-            data: [
-              {
-                name: "room1",
-                value: 15,
-                itemStyle: {
-                  // 该数据所在区域的多边形样式设置
-                  areaColor: color1, // 可以通过这个来设置小块地图区域的颜色
-                  color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
-                  opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
-                },
-                selected: false, // 该区域是否选中，没看到具体作用
-                label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
-                },
-                emphasis: {
-                  // 该数据所在区域的多边形高亮状态
-                  itemStyle: {
-                    /* 这里高亮时候设置颜色，解决方案有以下：
-                                     1.找到方案不改变颜色
-                                     2.设定变量获取本身的颜色*/
-                    areaColor: color1,
-                  },
-                },
-              },
-              {
-                name: "room2",
-                value: 30,
-                itemStyle: {
-                  // 该数据所在区域的多边形样式设置
-                  areaColor: color2, // 可以通过这个来设置小块地图区域的颜色
-                  color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
-                  opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
-                },
-                selected: false, // 该区域是否选中，没看到具体作用
-                label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
-                },
-                emphasis: {
-                  // 该数据所在区域的多边形高亮状态
-                  itemStyle: {
-                    /* 这里高亮时候设置颜色，解决方案有以下：
-                                         1.找到方案不改变颜色
-                                         2.设定变量获取本身的颜色*/
-                    areaColor: color2,
-                  },
-                },
-              },
-              {
-                name: "room3",
-                value: 15,
-                itemStyle: {
-                  // 该数据所在区域的多边形样式设置
-                  areaColor: color3, // 可以通过这个来设置小块地图区域的颜色
-                  color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
-                  opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
-                },
-                selected: false, // 该区域是否选中，没看到具体作用
-                label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
-                },
-                emphasis: {
-                  // 该数据所在区域的多边形高亮状态
-                  itemStyle: {
-                    /* 这里高亮时候设置颜色，解决方案有以下：
-                                         1.找到方案不改变颜色
-                                         2.设定变量获取本身的颜色*/
-                    areaColor: color3,
-                  },
-                },
-              },
-              {
-                name: "room4",
-                value: 15,
-                itemStyle: {
-                  // 该数据所在区域的多边形样式设置
-                  areaColor: color4, // 可以通过这个来设置小块地图区域的颜色
-                  color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
-                  opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
-                },
-                selected: false, // 该区域是否选中，没看到具体作用
-                label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
-                },
-                emphasis: {
-                  // 该数据所在区域的多边形高亮状态
-                  itemStyle: {
-                    /* 这里高亮时候设置颜色，解决方案有以下：
-                                         1.找到方案不改变颜色
-                                         2.设定变量获取本身的颜色*/
-                    areaColor: color4,
-                  },
-                },
-              },
-              {
-                name: "room5",
-                value: 15,
-                itemStyle: {
-                  // 该数据所在区域的多边形样式设置
-                  areaColor: color5, // 可以通过这个来设置小块地图区域的颜色
-                  color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
-                  opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
-                },
-                selected: false, // 该区域是否选中，没看到具体作用
-                label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
-                },
-                emphasis: {
-                  // 该数据所在区域的多边形高亮状态
-                  itemStyle: {
-                    /* 这里高亮时候设置颜色，解决方案有以下：
-                                         1.找到方案不改变颜色
-                                         2.设定变量获取本身的颜色*/
-                    areaColor: color5,
-                  },
-                },
-              },
-            ],
-          },
-        ],
-      };
-      this.chartInstance1.setOption(option);
-    },
-    async initMuseum2() {
-      var chartDom = document.getElementById("museum2");
-      this.chartInstance2 = this.$echarts.init(chartDom);
-      var option;
-      var color1 = "#cf0000";
-      var color2 = "#55cf29";
-      var color3 = "#55cf29";
-      var color4 = "#cfc559";
-      var color5 = "#ffff00";
-
-      const res = await this.$http.get(
-        // 'https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/examples/data/asset/geo/Beef_cuts_France.svg'
-        // 'http://101.132.96.7:8080/shanghaimuseum/img/Beef_cuts_France.svg'
-        "http://live.lstblog.com/museum2_440_430.svg"
+        // "http://live.lstblog.com/museum1_450_440.svg"
+        "/static/svg/museum4.svg"
       );
       // console.log(res);
 
@@ -290,61 +64,101 @@ export default {
 
       // 在option中配置所需项目
       option = {
-        // colorBy: 'data', // 默认serise，可选择为data
+        geo: {
+          map: "Museum",
+        },
 
         tooltip: {
           show: true,
         }, // 默认配置提示框
 
-        // visualMap是视觉映射组件
-        /* 这里可以借鉴一下由series数据大小映射颜色的方法，但是不一定用这种方法
-                    可以使用每个馆，通过数据映射来显示每个馆的颜色(这里需要设定一个合理的机制)
-                    */
-        // visualMap: {
-        // 	// left: 'center',
-        // 	// bottom: '10%',
-        // 	min: 5,
-        // 	max: 100,
-        // 	// orient: 'horizontal',
-        // 	// text: ['', 'Price'],
-        // 	// realtime: true,
-        // 	// calculable: true,
-        // 	inRange: {
-        // 		color: ['#dbac00', '#db6e00', '#cf0000']
-        // 	}
-        // },
-
         series: [
+          {
+            type: "scatter",
+            coordinateSystem: "geo",
+            geoIndex: 0,
+            data: [
+              // SVG local coords.
+              [127.28125000000003, 123.62500000000003], // 第一展览厅
+              // [320.78125000000006, 158.56250000000003], // 中国古代青铜馆
+              [138.03125000000003, 243.21875000000006], // 中国古代雕塑馆
+            ],
+            tooltip: {
+              show: false,
+            },
+            label: {
+              show: false,
+            },
+            itemStyle: {
+              color: "green",
+            },
+          },
+          {
+            type: "effectScatter",
+            coordinateSystem: "geo",
+            geoIndex: 0,
+            data: [
+              // SVG local coords.
+              // [127.28125000000003, 123.62500000000003], // 第一展览厅
+              // [320.78125000000006, 158.56250000000003], // 中国古代青铜馆
+              // [138.03125000000003, 243.21875000000006], // 中国古代雕塑馆
+              {
+                value: [320.78125000000006, 158.56250000000003],
+                name: "中国古代青铜馆",
+              },
+            ],
+            tooltip: {
+              show: false,
+            },
+            label: {
+              show: false,
+            },
+            itemStyle: {
+              // color: 'red', // 风险：优良中差 <--> 颜色：绿黄橙红
+              color: "orange",
+              // color: 'yellow',
+            },
+            symbolSize: 15, // 报警信号尺寸
+          },
           {
             name: "文物风险状况", // 起个名字
             type: "map", // 设置为地图类型
             map: "Museum", // 使用这个地图
+
+            label: {
+              show: true,
+              fontWeight: "lighter",
+              fontFamily: "Microsoft YaHei",
+            },
 
             // roam: true, // 鼠标缩放，平移功能
 
             // 高亮状态下的多边形和标签样式。
             /* 这里是高亮情况下的一些设置，属性较多，后面可能需要实验
                         不设置即默认
-                        后续还需要解决：放置在上面背景颜色的更改*/
+                        后续还需要解决：放置在上面背景颜色的更改
+                        另外，这里取消掉，悬浮鼠标时会显示图标名称*/
 
             emphasis: {
               label: {
+                // 图标名字显示（这个可以要）
                 /* 这里应该不需要 */
-                show: false, // 是否显示标签
-                position: "top",
-                rotate: 90,
-                color: "#eaeaea",
+                show: true, // 是否显示标签
+                color: "#000",
+                fontFamily: "Microsoft YaHei",
+                fontWeight: "bolder",
               },
+              // 高亮设置（这个需要）
               /* itemStyle指的是 */
               itemStyle: {
-                areaColor: "#eaeaea", // 地图区域的颜色(高亮时的颜色)
+                areaColor: "#eaeaea", // 地图区域的颜色(高亮时的颜色)且只对未定义颜色的区域有用
                 color: "#0000ff", // ???图形的颜色(如下)（这里修改不了）
                 borderColor: "#000", // 每个小块图形的轮廓颜色
                 opacity: 1, // 透明度设置，这个地方改变了高亮时的颜色
               },
             },
 
-            // 选中模式，表示是否支持多个选中
+            // 选中模式，表示是否支持多个选中-且会显示相应标签（这个不需要）
             selectedMode: false,
 
             // 给对应的块赋值
@@ -366,145 +180,220 @@ export default {
                          */
             data: [
               {
-                name: "room1",
+                name: "第一展览厅",
                 value: 15,
+                tooltip: {
+                  formatter: "{a}<br/>(暂无)", //{a}=seriesname文物风险情况 {b}=数据name第一层展厅 {c}=value值15
+                },
                 itemStyle: {
-                  // 该数据所在区域的多边形样式设置
-                  areaColor: color1, // 可以通过这个来设置小块地图区域的颜色
-                  color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
-                  opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
+                  color: "black",
+                  opacity: 0.5,
                 },
-                selected: false, // 该区域是否选中，没看到具体作用
                 label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
+                  position: ["13%", "20%"],
                 },
-                emphasis: {
-                  // 该数据所在区域的多边形高亮状态
-                  itemStyle: {
-                    /* 这里高亮时候设置颜色，解决方案有以下：
-                                     1.找到方案不改变颜色
-                                     2.设定变量获取本身的颜色*/
-                    areaColor: color1,
-                  },
-                },
+                selected: false,
               },
               {
-                name: "room2",
-                value: 30,
+                name: "中国古代雕塑馆",
+                value: 15,
+                tooltip: {
+                  formatter: "{a}<br/>(暂无)", //{a}=seriesname文物风险情况 {b}=数据name第一层展厅 {c}=value值15
+                },
                 itemStyle: {
-                  // 该数据所在区域的多边形样式设置
-                  areaColor: color2, // 可以通过这个来设置小块地图区域的颜色
-                  color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
-                  opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
+                  color: "black",
+                  opacity: 0.5,
                 },
-                selected: false, // 该区域是否选中，没看到具体作用
                 label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
+                  position: ["1%", "75%"],
                 },
-                emphasis: {
-                  // 该数据所在区域的多边形高亮状态
-                  itemStyle: {
-                    /* 这里高亮时候设置颜色，解决方案有以下：
-                                         1.找到方案不改变颜色
-                                         2.设定变量获取本身的颜色*/
-                    areaColor: color2,
-                  },
-                },
+                selected: false,
               },
               {
-                name: "room3",
+                name: "中国古代青铜馆",
                 value: 15,
+                tooltip: {
+                  formatter: "{a}<br/>(1)镶红铜  良<br/>(2)铜铁复合兵器  中", //{a}=seriesname文物风险情况 {b}=数据name第一层展厅 {c}=value值15
+                },
                 itemStyle: {
-                  // 该数据所在区域的多边形样式设置
-                  areaColor: color3, // 可以通过这个来设置小块地图区域的颜色
-                  color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
-                  opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
+                  color: "black",
+                  opacity: 0.5,
                 },
-                selected: false, // 该区域是否选中，没看到具体作用
                 label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
+                  position: ["5%", "15%"],
                 },
-                emphasis: {
-                  // 该数据所在区域的多边形高亮状态
-                  itemStyle: {
-                    /* 这里高亮时候设置颜色，解决方案有以下：
-                                         1.找到方案不改变颜色
-                                         2.设定变量获取本身的颜色*/
-                    areaColor: color3,
-                  },
+                selected: false,
+              },
+            ],
+          },
+        ],
+      };
+
+      this.chartInstance1.setOption(option);
+
+      this.chartInstance1.on("click", function (params) {
+        // console.log(params);
+        // 判断你点击位置是地图还是散点
+        if (params.componentSubType == "map") {
+          _this.$store.commit("home/UPDATELOCAL", params.name);
+          // _this.local = params.name;
+          console.log(_this.local);
+        } else if (params.componentSubType == "effectScatter") {
+          // 点击到博物馆地图上的相应展厅报警信号，跳转到溯源与决策页面，此处后面应该关联展厅
+          // _this.local = params.data.name;
+          _this.$store.commit("home/UPDATELOCAL", params.data.name);
+          _this.$root.indexName = params.data.name; // 到决策页面的对应展厅
+          console.log("_this.indexName=", _this.$root.indexName);
+          _this.$router.push({
+            path: "/decision",
+          });
+        }
+      });
+    },
+    // 2
+    async initMuseum2() {
+      var chartDom = document.getElementById("museum2");
+      this.chartInstance2 = this.$echarts.init(chartDom);
+      var option;
+      const _this = this;
+
+      const { data: res } = await this.$http.get(
+        // 'https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/examples/data/asset/geo/Beef_cuts_France.svg'
+        // 'http://101.132.96.7:8080/shanghaimuseum/img/Beef_cuts_France.svg'
+        "/static/svg/museum2.svg"
+      );
+      // console.log(res);
+
+      // 加一个判断svg的
+      if (res != undefined) {
+        console.log("===2===");
+        this.$echarts.registerMap("Museum", {
+          svg: res,
+        });
+      }
+
+      // 在option中配置所需项目
+      option = {
+        geo: {
+          map: "Museum",
+        },
+
+        tooltip: {
+          show: true,
+        },
+
+        series: [
+          {
+            type: "scatter",
+            coordinateSystem: "geo",
+            geoIndex: 0,
+            data: [
+              // SVG local coords.
+              [61.43749999999998, 341.25], // 第二展览厅
+              [347.5625, 207.375], // 中国古代陶瓷馆
+            ],
+            tooltip: {
+              show: false,
+            },
+            label: {
+              show: false,
+            },
+            itemStyle: {
+              color: "green",
+            },
+          },
+
+          {
+            name: "文物风险状况",
+            type: "map",
+            map: "Museum",
+
+            label: {
+              show: true,
+              fontWeight: "lighter",
+              fontFamily: "Microsoft YaHei",
+            },
+
+            emphasis: {
+              label: {
+                show: true, // 是否显示标签
+                color: "#000",
+                fontFamily: "Microsoft YaHei",
+                fontWeight: "bolder",
+              },
+              itemStyle: {
+                areaColor: "#eaeaea",
+                color: "#0000ff",
+                borderColor: "#000",
+                opacity: 1,
+              },
+            },
+
+            selectedMode: false,
+
+            data: [
+              {
+                name: "第二展览厅",
+                value: 15,
+                tooltip: {
+                  formatter: "{a}<br/>(暂无)",
                 },
+                itemStyle: {
+                  color: "black",
+                  opacity: 0.5,
+                },
+                selected: false,
               },
               {
-                name: "room4",
+                name: "中国古代陶瓷馆",
                 value: 15,
-                itemStyle: {
-                  // 该数据所在区域的多边形样式设置
-                  areaColor: color4, // 可以通过这个来设置小块地图区域的颜色
-                  color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
-                  opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
+                tooltip: {
+                  formatter: "{a}<br/>(暂无)",
                 },
-                selected: false, // 该区域是否选中，没看到具体作用
                 label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
+                  position: ["45%", "80%"],
                 },
-                emphasis: {
-                  // 该数据所在区域的多边形高亮状态
-                  itemStyle: {
-                    /* 这里高亮时候设置颜色，解决方案有以下：
-                                         1.找到方案不改变颜色
-                                         2.设定变量获取本身的颜色*/
-                    areaColor: color4,
-                  },
-                },
-              },
-              {
-                name: "room5",
-                value: 15,
                 itemStyle: {
-                  // 该数据所在区域的多边形样式设置
-                  areaColor: color5, // 可以通过这个来设置小块地图区域的颜色
-                  color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
-                  opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
+                  color: "black",
+                  opacity: 0.5,
                 },
-                selected: false, // 该区域是否选中，没看到具体作用
-                label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
-                },
-                emphasis: {
-                  // 该数据所在区域的多边形高亮状态
-                  itemStyle: {
-                    /* 这里高亮时候设置颜色，解决方案有以下：
-                                         1.找到方案不改变颜色
-                                         2.设定变量获取本身的颜色*/
-                    areaColor: color5,
-                  },
-                },
+                selected: false,
               },
             ],
           },
         ],
       };
       this.chartInstance2.setOption(option);
+      this.chartInstance2.on("click", function (params) {
+        // console.log(params);
+        // 判断你点击位置是地图还是散点
+        if (params.componentSubType == "map") {
+          _this.$store.commit("home/UPDATELOCAL", params.name);
+          // _this.local = params.name;
+          console.log(_this.local);
+        } else if (params.componentSubType == "effectScatter") {
+          // 点击到博物馆地图上的相应展厅报警信号，跳转到溯源与决策页面，此处后面应该关联展厅
+          // _this.local = params.data.name;
+          _this.$store.commit("home/UPDATELOCAL", params.data.name);
+          _this.$root.indexName = params.data.name; // 到决策页面的对应展厅
+          console.log("_this.indexName=", _this.$root.indexName);
+          _this.$router.push({
+            path: "/decision",
+          });
+        }
+      });
     },
+    // 3
     async initMuseum3() {
       var chartDom = document.getElementById("museum3");
       this.chartInstance3 = this.$echarts.init(chartDom);
       var option;
-      var color1 = "#cf0000";
-      var color2 = "#55cf29";
-      var color3 = "#55cf29";
-      var color4 = "#cfc559";
-      var color5 = "#ffff00";
+      const _this = this;
 
-      const res = await this.$http.get(
+      const { data: res } = await this.$http.get(
         // 'https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/examples/data/asset/geo/Beef_cuts_France.svg'
         // 'http://101.132.96.7:8080/shanghaimuseum/img/Beef_cuts_France.svg'
-        "http://live.lstblog.com/museum3_430_420.svg"
+        "/static/svg/museum3.svg"
       );
       // console.log(res);
 
@@ -518,198 +407,128 @@ export default {
 
       // 在option中配置所需项目
       option = {
-        // colorBy: 'data', // 默认serise，可选择为data
+        geo: {
+          map: "Museum",
+        },
 
         tooltip: {
           show: true,
-        }, // 默认配置提示框
-
-        // visualMap是视觉映射组件
-        /* 这里可以借鉴一下由series数据大小映射颜色的方法，但是不一定用这种方法
-                    可以使用每个馆，通过数据映射来显示每个馆的颜色(这里需要设定一个合理的机制)
-                    */
-        // visualMap: {
-        // 	// left: 'center',
-        // 	// bottom: '10%',
-        // 	min: 5,
-        // 	max: 100,
-        // 	// orient: 'horizontal',
-        // 	// text: ['', 'Price'],
-        // 	// realtime: true,
-        // 	// calculable: true,
-        // 	inRange: {
-        // 		color: ['#dbac00', '#db6e00', '#cf0000']
-        // 	}
-        // },
+        },
 
         series: [
           {
-            name: "文物风险状况", // 起个名字
-            type: "map", // 设置为地图类型
-            map: "Museum", // 使用这个地图
+            type: "scatter",
+            coordinateSystem: "geo",
+            geoIndex: 0,
+            data: [
+              // SVG local coords.
+              [65.46875000000003, 240.53125000000006], // 中国历代书法馆
+              [229.40625000000006, 86.00000000000003], // 中国历代绘画馆
+              [198.50000000000006, 385.65625000000006], // 中国历代印章馆
+            ],
+            tooltip: {
+              show: false,
+            },
+            label: {
+              show: false,
+            },
+            itemStyle: {
+              color: "green",
+            },
+          },
 
-            // roam: true, // 鼠标缩放，平移功能
+          {
+            name: "文物风险状况",
+            type: "map",
+            map: "Museum",
 
-            // 高亮状态下的多边形和标签样式。
-            /* 这里是高亮情况下的一些设置，属性较多，后面可能需要实验
-                        不设置即默认
-                        后续还需要解决：放置在上面背景颜色的更改*/
+            label: {
+              show: true,
+              fontWeight: "lighter",
+              fontFamily: "Microsoft YaHei",
+            },
 
             emphasis: {
               label: {
-                /* 这里应该不需要 */
-                show: false, // 是否显示标签
-                position: "top",
-                rotate: 90,
-                color: "#eaeaea",
+                show: true, // 是否显示标签
+                color: "#000",
+                fontFamily: "Microsoft YaHei",
+                fontWeight: "bolder",
               },
-              /* itemStyle指的是 */
               itemStyle: {
-                areaColor: "#eaeaea", // 地图区域的颜色(高亮时的颜色)
-                color: "#0000ff", // ???图形的颜色(如下)（这里修改不了）
-                borderColor: "#000", // 每个小块图形的轮廓颜色
-                opacity: 1, // 透明度设置，这个地方改变了高亮时的颜色
+                areaColor: "#eaeaea",
+                color: "#0000ff",
+                borderColor: "#000",
+                opacity: 1,
               },
             },
-
-            // 选中模式，表示是否支持多个选中
             selectedMode: false,
-
-            // 给对应的块赋值
-            /*
-                        地图系列的数据内容数组，数组项可以为单个数值
-                        如果需要在数据中加入其它维度给 visualMap 组件用来映射到颜色等其它图形属性。每个数据项也可以是数组
-                        这时候可以将每项数组中的第二个值指定给 visualMap 组件。
-                        更多时候我们需要指定每个数据项的名称，这时候需要每个项为一个对象。
-
-                        name 数据所对应的地图区域的名称
-                        number 该区域的数据值
-                        selected 该区域是否选中
-                        ** itemStyle 该数据所在区域的多边形样式设置
-
-                        ** label 图形上的文本标签，可用于说明图形的一些数据信息，比如值，名称等。
-                        ** emphasis 该数据所在区域的多边形高亮状态
-                        ** select 该数据所在区域的多边形选中状态
-                        * tooltip 本系列每个数据项中特定的 tooltip 设定。
-                         */
             data: [
               {
-                name: "room1",
+                name: "中国历代绘画馆",
                 value: 15,
+                tooltip: {
+                  formatter: "{a}<br/>(暂无)", //{a}=seriesname文物风险情况 {b}=数据name第一层展厅 {c}=value值15
+                },
                 itemStyle: {
-                  // 该数据所在区域的多边形样式设置
-                  areaColor: color1, // 可以通过这个来设置小块地图区域的颜色
-                  color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
-                  opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
+                  // areaColor: color1,
+                  color: "black",
+                  opacity: 0.5,
                 },
-                selected: false, // 该区域是否选中，没看到具体作用
                 label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
+                  position: ["25%", "5%"],
                 },
+
+                selected: false,
+
                 emphasis: {
-                  // 该数据所在区域的多边形高亮状态
                   itemStyle: {
-                    /* 这里高亮时候设置颜色，解决方案有以下：
-                                     1.找到方案不改变颜色
-                                     2.设定变量获取本身的颜色*/
-                    areaColor: color1,
+                    // areaColor: color1
                   },
                 },
               },
               {
-                name: "room2",
-                value: 30,
+                name: "中国历代印章馆",
+                value: 15,
+                tooltip: {
+                  formatter: "{a}<br/>(暂无)", //{a}=seriesname文物风险情况 {b}=数据name第一层展厅 {c}=value值15
+                },
                 itemStyle: {
-                  // 该数据所在区域的多边形样式设置
-                  areaColor: color2, // 可以通过这个来设置小块地图区域的颜色
-                  color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
-                  opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
+                  // areaColor: color1,
+                  color: "black",
+                  opacity: 0.5,
                 },
-                selected: false, // 该区域是否选中，没看到具体作用
                 label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
+                  position: ["7%", "25%"],
                 },
+
+                selected: false,
+
                 emphasis: {
-                  // 该数据所在区域的多边形高亮状态
                   itemStyle: {
-                    /* 这里高亮时候设置颜色，解决方案有以下：
-                                         1.找到方案不改变颜色
-                                         2.设定变量获取本身的颜色*/
-                    areaColor: color2,
+                    // areaColor: color1
                   },
                 },
               },
               {
-                name: "room3",
+                name: "中国历代书法馆",
                 value: 15,
+                tooltip: {
+                  formatter: "{a}<br/>(暂无)", //{a}=seriesname文物风险情况 {b}=数据name第一层展厅 {c}=value值15
+                },
                 itemStyle: {
-                  // 该数据所在区域的多边形样式设置
-                  areaColor: color3, // 可以通过这个来设置小块地图区域的颜色
-                  color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
-                  opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
+                  // areaColor: color1,
+                  color: "black",
+                  opacity: 0.5,
                 },
-                selected: false, // 该区域是否选中，没看到具体作用
                 label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
+                  position: ["-5%", "25%"],
                 },
+                selected: false,
+
                 emphasis: {
-                  // 该数据所在区域的多边形高亮状态
                   itemStyle: {
-                    /* 这里高亮时候设置颜色，解决方案有以下：
-                                         1.找到方案不改变颜色
-                                         2.设定变量获取本身的颜色*/
-                    areaColor: color3,
-                  },
-                },
-              },
-              {
-                name: "room4",
-                value: 15,
-                itemStyle: {
-                  // 该数据所在区域的多边形样式设置
-                  areaColor: color4, // 可以通过这个来设置小块地图区域的颜色
-                  color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
-                  opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
-                },
-                selected: false, // 该区域是否选中，没看到具体作用
-                label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
-                },
-                emphasis: {
-                  // 该数据所在区域的多边形高亮状态
-                  itemStyle: {
-                    /* 这里高亮时候设置颜色，解决方案有以下：
-                                         1.找到方案不改变颜色
-                                         2.设定变量获取本身的颜色*/
-                    areaColor: color4,
-                  },
-                },
-              },
-              {
-                name: "room5",
-                value: 15,
-                itemStyle: {
-                  // 该数据所在区域的多边形样式设置
-                  areaColor: color5, // 可以通过这个来设置小块地图区域的颜色
-                  color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
-                  opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
-                },
-                selected: false, // 该区域是否选中，没看到具体作用
-                label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
-                },
-                emphasis: {
-                  // 该数据所在区域的多边形高亮状态
-                  itemStyle: {
-                    /* 这里高亮时候设置颜色，解决方案有以下：
-                                         1.找到方案不改变颜色
-                                         2.设定变量获取本身的颜色*/
-                    areaColor: color5,
+                    // areaColor: 'red'
                   },
                 },
               },
@@ -717,22 +536,37 @@ export default {
           },
         ],
       };
+
       this.chartInstance3.setOption(option);
+        this.chartInstance3.on("click", function (params) {
+        // console.log(params);
+        // 判断你点击位置是地图还是散点
+        if (params.componentSubType == "map") {
+          _this.$store.commit("home/UPDATELOCAL", params.name);
+          // _this.local = params.name;
+        } else if (params.componentSubType == "effectScatter") {
+          // 点击到博物馆地图上的相应展厅报警信号，跳转到溯源与决策页面，此处后面应该关联展厅
+          // _this.local = params.data.name;
+          _this.$store.commit("home/UPDATELOCAL", params.data.name);
+          _this.$root.indexName = params.data.name; // 到决策页面的对应展厅
+          console.log("_this.indexName=", _this.$root.indexName);
+          _this.$router.push({
+            path: "/decision",
+          });
+        }
+      });
     },
+    // 4
     async initMuseum4() {
       var chartDom = document.getElementById("museum4");
       this.chartInstance4 = this.$echarts.init(chartDom);
       var option;
-      var color1 = "#cf0000";
-      var color2 = "#55cf29";
-      var color3 = "#55cf29";
-      var color4 = "#cfc559";
-      var color5 = "#ffff00";
+      const _this = this;
 
-      const res = await this.$http.get(
+      const { data: res } = await this.$http.get(
         // 'https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/examples/data/asset/geo/Beef_cuts_France.svg'
         // 'http://101.132.96.7:8080/shanghaimuseum/img/Beef_cuts_France.svg'
-        "http://live.lstblog.com/museum4_440_430.svg"
+        "/static/svg/museum1.svg"
       );
       // console.log(res);
 
@@ -746,198 +580,181 @@ export default {
 
       // 在option中配置所需项目
       option = {
-        // colorBy: 'data', // 默认serise，可选择为data
-
+        geo: {
+          map: "Museum",
+        },
         tooltip: {
           show: true,
-        }, // 默认配置提示框
-
-        // visualMap是视觉映射组件
-        /* 这里可以借鉴一下由series数据大小映射颜色的方法，但是不一定用这种方法
-                    可以使用每个馆，通过数据映射来显示每个馆的颜色(这里需要设定一个合理的机制)
-                    */
-        // visualMap: {
-        // 	// left: 'center',
-        // 	// bottom: '10%',
-        // 	min: 5,
-        // 	max: 100,
-        // 	// orient: 'horizontal',
-        // 	// text: ['', 'Price'],
-        // 	// realtime: true,
-        // 	// calculable: true,
-        // 	inRange: {
-        // 		color: ['#dbac00', '#db6e00', '#cf0000']
-        // 	}
-        // },
-
+        },
         series: [
           {
-            name: "文物风险状况", // 起个名字
-            type: "map", // 设置为地图类型
-            map: "Museum", // 使用这个地图
+            type: "scatter",
+            coordinateSystem: "geo",
+            geoIndex: 0,
+            data: [
+              // SVG local coords.
+              [80.62500000000003, 210.37500000000006], // 中国历代钱币馆
+              [190.62500000000006, 379.50000000000006], // 中国明清家具馆
+              [259.3750000000001, 97.62500000000003], // 中国少数民族工艺馆
+              [368.0000000000001, 246.12500000000006], // 中国古代玉器馆
+              [341.8750000000001, 365.75000000000006], // 第三展览厅
+            ],
+            tooltip: {
+              show: false,
+            },
+            label: {
+              show: false,
+            },
+            itemStyle: {
+              color: "green",
+            },
+          },
+          {
+            name: "文物风险状况",
+            type: "map",
+            map: "Museum",
 
-            // roam: true, // 鼠标缩放，平移功能
-
-            // 高亮状态下的多边形和标签样式。
-            /* 这里是高亮情况下的一些设置，属性较多，后面可能需要实验
-                        不设置即默认
-                        后续还需要解决：放置在上面背景颜色的更改*/
+            label: {
+              show: true,
+              fontWeight: "lighter",
+              fontFamily: "Microsoft YaHei",
+            },
 
             emphasis: {
               label: {
-                /* 这里应该不需要 */
-                show: false, // 是否显示标签
-                position: "top",
-                rotate: 90,
-                color: "#eaeaea",
+                show: true, // 是否显示标签
+                color: "#000",
+                fontFamily: "Microsoft YaHei",
+                fontWeight: "bolder",
               },
-              /* itemStyle指的是 */
               itemStyle: {
-                areaColor: "#eaeaea", // 地图区域的颜色(高亮时的颜色)
-                color: "#0000ff", // ???图形的颜色(如下)（这里修改不了）
-                borderColor: "#000", // 每个小块图形的轮廓颜色
-                opacity: 1, // 透明度设置，这个地方改变了高亮时的颜色
+                areaColor: "#eaeaea",
+                color: "#0000ff",
+                borderColor: "#000",
+                opacity: 1,
               },
             },
-
-            // 选中模式，表示是否支持多个选中
             selectedMode: false,
-
-            // 给对应的块赋值
-            /*
-                        地图系列的数据内容数组，数组项可以为单个数值
-                        如果需要在数据中加入其它维度给 visualMap 组件用来映射到颜色等其它图形属性。每个数据项也可以是数组
-                        这时候可以将每项数组中的第二个值指定给 visualMap 组件。
-                        更多时候我们需要指定每个数据项的名称，这时候需要每个项为一个对象。
-
-                        name 数据所对应的地图区域的名称
-                        number 该区域的数据值
-                        selected 该区域是否选中
-                        ** itemStyle 该数据所在区域的多边形样式设置
-
-                        ** label 图形上的文本标签，可用于说明图形的一些数据信息，比如值，名称等。
-                        ** emphasis 该数据所在区域的多边形高亮状态
-                        ** select 该数据所在区域的多边形选中状态
-                        * tooltip 本系列每个数据项中特定的 tooltip 设定。
-                         */
             data: [
+              // 以下这些名字是绘图时候确定的各个展厅的名字，以下可以对应赋值
               {
-                name: "room1",
+                name: "中国历代钱币馆",
                 value: 15,
+                tooltip: {
+                  formatter: "{a}<br/>(暂无)", //{a}=seriesname文物风险情况 {b}=数据name第一层展厅 {c}=value值15
+                },
                 itemStyle: {
                   // 该数据所在区域的多边形样式设置
-                  areaColor: color1, // 可以通过这个来设置小块地图区域的颜色
+                  // areaColor: color1, // 可以通过这个来设置小块地图区域的颜色
                   color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
                   opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
                 },
-                selected: false, // 该区域是否选中，没看到具体作用
                 label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
+                  position: ["-5%", "40%"],
                 },
+                selected: false, // 该区域是否选中，没看到具体作用（应该是没有使用到）
+              },
+              {
+                name: "中国少数民族工艺馆",
+                value: 15,
+                tooltip: {
+                  formatter: "{a}<br/>(暂无)", //{a}=seriesname文物风险情况 {b}=数据name第一层展厅 {c}=value值15
+                },
+                itemStyle: {
+                  // 该数据所在区域的多边形样式设置
+                  // areaColor: color1, // 可以通过这个来设置小块地图区域的颜色
+                  color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
+                  opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
+                },
+                label: {
+                  position: ["15%", "25%"],
+                },
+                selected: false, // 该区域是否选中，没看到具体作用（应该是没有使用到）
                 emphasis: {
                   // 该数据所在区域的多边形高亮状态
                   itemStyle: {
                     /* 这里高亮时候设置颜色，解决方案有以下：
                                      1.找到方案不改变颜色
                                      2.设定变量获取本身的颜色*/
-                    areaColor: color1,
+                    // areaColor: color1
                   },
                 },
               },
               {
-                name: "room2",
-                value: 30,
-                itemStyle: {
-                  // 该数据所在区域的多边形样式设置
-                  areaColor: color2, // 可以通过这个来设置小块地图区域的颜色
-                  color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
-                  opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
-                },
-                selected: false, // 该区域是否选中，没看到具体作用
-                label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
-                },
-                emphasis: {
-                  // 该数据所在区域的多边形高亮状态
-                  itemStyle: {
-                    /* 这里高亮时候设置颜色，解决方案有以下：
-                                         1.找到方案不改变颜色
-                                         2.设定变量获取本身的颜色*/
-                    areaColor: color2,
-                  },
-                },
-              },
-              {
-                name: "room3",
+                name: "中国古代玉器馆",
                 value: 15,
+                tooltip: {
+                  formatter: "{a}<br/>(暂无)", //{a}=seriesname文物风险情况 {b}=数据name第一层展厅 {c}=value值15
+                },
                 itemStyle: {
                   // 该数据所在区域的多边形样式设置
-                  areaColor: color3, // 可以通过这个来设置小块地图区域的颜色
+                  // areaColor: color1, // 可以通过这个来设置小块地图区域的颜色
                   color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
                   opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
                 },
-                selected: false, // 该区域是否选中，没看到具体作用
                 label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
+                  position: ["-10%", "25%"],
                 },
+                selected: false, // 该区域是否选中，没看到具体作用（应该是没有使用到）
                 emphasis: {
                   // 该数据所在区域的多边形高亮状态
                   itemStyle: {
                     /* 这里高亮时候设置颜色，解决方案有以下：
-                                         1.找到方案不改变颜色
-                                         2.设定变量获取本身的颜色*/
-                    areaColor: color3,
+                                     1.找到方案不改变颜色
+                                     2.设定变量获取本身的颜色*/
+                    // areaColor: color1
                   },
                 },
               },
               {
-                name: "room4",
+                name: "第三展览厅",
                 value: 15,
+                tooltip: {
+                  formatter: "{a}<br/>(暂无)", //{a}=seriesname文物风险情况 {b}=数据name第一层展厅 {c}=value值15
+                },
                 itemStyle: {
                   // 该数据所在区域的多边形样式设置
-                  areaColor: color4, // 可以通过这个来设置小块地图区域的颜色
+                  // areaColor: color1, // 可以通过这个来设置小块地图区域的颜色
                   color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
                   opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
                 },
-                selected: false, // 该区域是否选中，没看到具体作用
                 label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
+                  position: ["25%", "5%"],
                 },
+                selected: false, // 该区域是否选中，没看到具体作用（应该是没有使用到）
                 emphasis: {
                   // 该数据所在区域的多边形高亮状态
                   itemStyle: {
                     /* 这里高亮时候设置颜色，解决方案有以下：
-                                         1.找到方案不改变颜色
-                                         2.设定变量获取本身的颜色*/
-                    areaColor: color4,
+                                     1.找到方案不改变颜色
+                                     2.设定变量获取本身的颜色*/
+                    // areaColor: color1
                   },
                 },
               },
               {
-                name: "room5",
+                name: "中国明清家具馆",
                 value: 15,
+                tooltip: {
+                  formatter: "{a}<br/>(暂无)", //{a}=seriesname文物风险情况 {b}=数据name第一层展厅 {c}=value值15
+                },
                 itemStyle: {
                   // 该数据所在区域的多边形样式设置
-                  areaColor: color5, // 可以通过这个来设置小块地图区域的颜色
+                  // areaColor: color1, // 可以通过这个来设置小块地图区域的颜色
                   color: "black", // 这个颜色暂时是干什么的还不知道(对tooltip提示框的颜色有所影响)
                   opacity: 0.5, // 透明度，对区域有影响（可以更改颜色的度，后面有用）
                 },
-                selected: false, // 该区域是否选中，没看到具体作用
                 label: {
-                  // 图形上的文本标签
-                  show: false, // 这个应该不需要使用
+                  position: ["30%", "15%"],
                 },
+                selected: false, // 该区域是否选中，没看到具体作用（应该是没有使用到）
                 emphasis: {
                   // 该数据所在区域的多边形高亮状态
                   itemStyle: {
                     /* 这里高亮时候设置颜色，解决方案有以下：
-                                         1.找到方案不改变颜色
-                                         2.设定变量获取本身的颜色*/
-                    areaColor: color5,
+                                     1.找到方案不改变颜色
+                                     2.设定变量获取本身的颜色*/
+                    // areaColor: color1
                   },
                 },
               },
@@ -945,7 +762,26 @@ export default {
           },
         ],
       };
+
       this.chartInstance4.setOption(option);
+      this.chartInstance4.on("click", function (params) {
+        // console.log(params);
+        // 判断你点击位置是地图还是散点
+        if (params.componentSubType == "map") {
+          _this.$store.commit("home/UPDATELOCAL", params.name);
+          // _this.local = params.name;
+          console.log(_this.local);
+        } else if (params.componentSubType == "effectScatter") {
+          // 点击到博物馆地图上的相应展厅报警信号，跳转到溯源与决策页面，此处后面应该关联展厅
+          // _this.local = params.data.name;
+          _this.$store.commit("home/UPDATELOCAL", params.data.name);
+          _this.$root.indexName = params.data.name; // 到决策页面的对应展厅
+          console.log("_this.indexName=", _this.$root.indexName);
+          _this.$router.push({
+            path: "/decision",
+          });
+        }
+      });
     },
     screenAdapter() {
       // const adapterOption = {};
